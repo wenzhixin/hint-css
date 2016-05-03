@@ -14,4 +14,21 @@ http://jsfiddle.net/wenyi/e3nk137y/6207
 ![2](https://cloud.githubusercontent.com/assets/2117018/14975833/54a6bc6c-1138-11e6-9826-cb81bdfc11a2.png)
 
 
+## How to use
+
+Remove:
+
+```
+<link rel="stylesheet" href="hint.css">
+```
+
+And add:
+
+```
+<link rel="stylesheet" href="hint-css.css">
+<script src="hint-css.js"></script>
+```
+
+---
+
 Thanks for hint.css and tipsy.
