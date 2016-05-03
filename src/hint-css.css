@@ -1,10 +1,10 @@
-.hint {
+.hint-css {
     font-size: 10px;
     position: absolute;
     padding: 5px;
     z-index: 100000;
 }
-.hint-inner {
+.hint-css-inner {
     background-color: #000;
     color: #FFF;
     max-width: 200px;
@@ -14,7 +14,7 @@
 
 /* Rounded corners */
 
-.hint-inner {
+.hint-css-inner {
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border-radius: 3px;
@@ -23,7 +23,7 @@
 /* Uncomment for shadow */
 
 
-.hint-arrow {
+.hint-css-arrow {
     position: absolute;
     width: 0;
     height: 0;
@@ -33,19 +33,19 @@
 
 /* Rules to colour arrows */
 
-.hint-arrow-n {
+.hint-css-arrow-n {
     border-bottom-color: #000;
 }
-.hint-arrow-s {
+.hint-css-arrow-s {
     border-top-color: #000;
 }
-.hint-arrow-e {
+.hint-css-arrow-e {
     border-left-color: #000;
 }
-.hint-arrow-w {
+.hint-css-arrow-w {
     border-right-color: #000;
 }
-.hint-n .hint-arrow {
+.hint-css-n .hint-css-arrow {
     top: 0;
     left: 50%;
     margin-left: -5px;
@@ -54,7 +54,7 @@
     border-left-color: transparent;
     border-right-color: transparent;
 }
-.hint-nw .hint-arrow {
+.hint-css-nw .hint-css-arrow {
     top: 0;
     left: 10px;
     border-bottom-style: solid;
@@ -62,7 +62,7 @@
     border-left-color: transparent;
     border-right-color: transparent;
 }
-.hint-ne .hint-arrow {
+.hint-css-ne .hint-css-arrow {
     top: 0;
     right: 10px;
     border-bottom-style: solid;
@@ -70,7 +70,7 @@
     border-left-color: transparent;
     border-right-color: transparent;
 }
-.hint-s .hint-arrow {
+.hint-css-s .hint-css-arrow {
     bottom: 0;
     left: 50%;
     margin-left: -5px;
@@ -79,7 +79,7 @@
     border-left-color: transparent;
     border-right-color: transparent;
 }
-.hint-sw .hint-arrow {
+.hint-css-sw .hint-css-arrow {
     bottom: 0;
     left: 10px;
     border-top-style: solid;
@@ -87,7 +87,7 @@
     border-left-color: transparent;
     border-right-color: transparent;
 }
-.hint-se .hint-arrow {
+.hint-css-se .hint-css-arrow {
     bottom: 0;
     right: 10px;
     border-top-style: solid;
@@ -95,7 +95,7 @@
     border-left-color: transparent;
     border-right-color: transparent;
 }
-.hint-e .hint-arrow {
+.hint-css-e .hint-css-arrow {
     right: 0;
     top: 50%;
     margin-top: -5px;
@@ -104,7 +104,7 @@
     border-top-color: transparent;
     border-bottom-color: transparent;
 }
-.hint-w .hint-arrow {
+.hint-css-w .hint-css-arrow {
     left: 0;
     top: 50%;
     margin-top: -5px;

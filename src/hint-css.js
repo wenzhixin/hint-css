@@ -19,13 +19,13 @@
 
     Hint.prototype = {
         show: function() {
-            $('.hint').remove();
+            $('.hint-css').remove();
             var title = this.getTitle();
             if (title && this.enabled) {
                 var $tip = this.tip();
 
-                $tip.find('.hint-inner')[this.options.html ? 'html' : 'text'](title);
-                $tip[0].className = 'hint'; // reset classname in case of dynamic gravity
+                $tip.find('.hint-css-inner')[this.options.html ? 'html' : 'text'](title);
+                $tip[0].className = 'hint-css'; // reset classname in case of dynamic gravity
                 $tip.remove().css({top: 0, left: 0, visibility: 'hidden', display: 'block'}).prependTo(document.body);
 
                 var pos = $.extend({}, this.$element.offset(), {
@@ -61,8 +61,8 @@
                     }
                 }
 
-                $tip.css(tp).addClass('hint-' + gravity);
-                $tip.find('.hint-arrow')[0].className = 'hint-arrow hint-arrow-' + gravity.charAt(0);
+                $tip.css(tp).addClass('hint-css-' + gravity);
+                $tip.find('.hint-css-arrow')[0].className = 'hint-css-arrow hint-css-arrow-' + gravity.charAt(0);
                 if (this.options.className) {
                     $tip.addClass(maybeCall(this.options.className, this.$element[0]));
                 }
@@ -104,7 +104,7 @@
 
         tip: function() {
             if (!this.$tip) {
-                this.$tip = $('<div class="hint"></div>').html('<div class="hint-arrow"></div><div class="hint-inner"></div>');
+                this.$tip = $('<div class="hint-css"></div>').html('<div class="hint-css-arrow"></div><div class="hint-css-inner"></div>');
                 this.$tip.data('hint-pointee', this.$element[0]);
             }
             return this.$tip;
@@ -114,10 +114,10 @@
     // global listen
     $.hint = function () {
         var get = function (ele, options) {
-            var hint = ele.data('hint');
+            var hint = ele.data('hint-css');
             if (!hint) {
                 hint = new Hint(ele, $.extend({}, $.hint.defaults, options));
-                ele.data('hint', hint);
+                ele.data('hint-css', hint);
             }
             return hint;
         };
