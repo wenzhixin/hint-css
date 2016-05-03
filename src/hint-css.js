@@ -1,7 +1,7 @@
 /**
  * @author zhixin wen <wenzhixin2010@gmail.com>
  * version: 1.0.0
- * https://github.com/wenzhixin/hint-js
+ * https://github.com/wenzhixin/hint-css
  */
 
 (function($) {
@@ -10,22 +10,22 @@
         return (typeof thing == 'function') ? (thing.call(ctx)) : thing;
     }
 
-    function Tipsy(element, options) {
+    function Hint(element, options) {
         this.$element = $(element);
         this.options = options;
         this.enabled = true;
         this.fixTitle();
     }
 
-    Tipsy.prototype = {
+    Hint.prototype = {
         show: function() {
-            $('.tipsy').remove();
+            $('.hint').remove();
             var title = this.getTitle();
             if (title && this.enabled) {
                 var $tip = this.tip();
 
-                $tip.find('.tipsy-inner')[this.options.html ? 'html' : 'text'](title);
-                $tip[0].className = 'tipsy'; // reset classname in case of dynamic gravity
+                $tip.find('.hint-inner')[this.options.html ? 'html' : 'text'](title);
+                $tip[0].className = 'hint'; // reset classname in case of dynamic gravity
                 $tip.remove().css({top: 0, left: 0, visibility: 'hidden', display: 'block'}).prependTo(document.body);
 
                 var pos = $.extend({}, this.$element.offset(), {
@@ -61,8 +61,8 @@
                     }
                 }
 
-                $tip.css(tp).addClass('tipsy-' + gravity);
-                $tip.find('.tipsy-arrow')[0].className = 'tipsy-arrow tipsy-arrow-' + gravity.charAt(0);
+                $tip.css(tp).addClass('hint-' + gravity);
+                $tip.find('.hint-arrow')[0].className = 'hint-arrow hint-arrow-' + gravity.charAt(0);
                 if (this.options.className) {
                     $tip.addClass(maybeCall(this.options.className, this.$element[0]));
                 }
@@ -104,39 +104,39 @@
 
         tip: function() {
             if (!this.$tip) {
-                this.$tip = $('<div class="tipsy"></div>').html('<div class="tipsy-arrow"></div><div class="tipsy-inner"></div>');
-                this.$tip.data('tipsy-pointee', this.$element[0]);
+                this.$tip = $('<div class="hint"></div>').html('<div class="hint-arrow"></div><div class="hint-inner"></div>');
+                this.$tip.data('hint-pointee', this.$element[0]);
             }
             return this.$tip;
         }
     };
 
     // global listen
-    $.tipsy = function () {
+    $.hint = function () {
         var get = function (ele, options) {
-            var tipsy = ele.data('tipsy');
-            if (!tipsy) {
-                tipsy = new Tipsy(ele, $.extend({}, $.tipsy.defaults, options));
-                ele.data('tipsy', tipsy);
+            var hint = ele.data('hint');
+            if (!hint) {
+                hint = new Hint(ele, $.extend({}, $.hint.defaults, options));
+                ele.data('hint', hint);
             }
-            return tipsy;
+            return hint;
         };
 
         $(document).on('mouseenter', '[data-hint]', function (e) {
             var $e = $(e.currentTarget);
-            var tipsy = get($e, {gravity: $e.hasClass('hint--top') ? 's' : 'n'});
-            tipsy.hoverState = 'in';
-            tipsy.show();
+            var hint = get($e, {gravity: $e.hasClass('hint--top') ? 's' : 'n'});
+            hint.hoverState = 'in';
+            hint.show();
         });
         $(document).on('mouseleave', '[data-hint]', function (e) {
             var $e = $(e.currentTarget);
-            var tipsy = get($e, {gravity: $e.hasClass('hint--top') ? 's' : 'n'});
-            tipsy.hoverState = 'out';
-            tipsy.hide();
+            var hint = get($e, {gravity: $e.hasClass('hint--top') ? 's' : 'n'});
+            hint.hoverState = 'out';
+            hint.hide();
         });
     };
 
-    $.tipsy.defaults = {
+    $.hint.defaults = {
         className: null,
         delayIn: 0,
         delayOut: 0,
@@ -154,5 +154,5 @@
 })(jQuery);
 
 $(function () {
-    $.tipsy();
+    $.hint();
 });
