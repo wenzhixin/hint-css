@@ -1,10 +1,9 @@
 /**
- * @author zhixin wen <wenzhixin2010@gmail.com>
- * version: 1.0.0
+ * version: 1.0.1
  * https://github.com/wenzhixin/hint-css
  */
 
-(function($) {
+(function ($) {
 
     function maybeCall(thing, ctx) {
         return (typeof thing == 'function') ? (thing.call(ctx)) : thing;
@@ -18,79 +17,123 @@
     }
 
     Hint.prototype = {
-        show: function() {
+        show: function () {
             $('.hint-css').remove();
             var title = this.getTitle();
             if (title && this.enabled) {
                 var $tip = this.tip();
 
-                $tip.find('.hint-css-inner')[this.options.html ? 'html' : 'text'](title);
+                $tip.find('.hint-css-inner')[this.options.html ? 'html' : 'text'](title)
+                    [this.options.html ? 'addClass' : 'removeClass']('hint-css-inner-html')
+                    .css({
+                        'text-align': this.options.textAlign,
+                        'max-width': this.options.maxWidth ? this.options.maxWidth : ''
+                    });
+
                 $tip[0].className = 'hint-css'; // reset classname in case of dynamic gravity
                 $tip.remove().css({top: 0, left: 0, visibility: 'hidden', display: 'block'}).prependTo(document.body);
 
-                var pos = $.extend({}, this.$element.offset(), {
-                    width: this.$element[0].offsetWidth,
-                    height: this.$element[0].offsetHeight
-                });
-
-                var actualWidth = $tip[0].offsetWidth,
-                    actualHeight = $tip[0].offsetHeight,
-                    gravity = maybeCall(this.options.gravity, this.$element[0]);
-
-                var tp;
-                switch (gravity.charAt(0)) {
-                    case 'n':
-                        tp = {top: pos.top + pos.height + this.options.offset, left: pos.left + pos.width / 2 - actualWidth / 2};
-                        break;
-                    case 's':
-                        tp = {top: pos.top - actualHeight - this.options.offset, left: pos.left + pos.width / 2 - actualWidth / 2};
-                        break;
-                    case 'e':
-                        tp = {top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left - actualWidth - this.options.offset};
-                        break;
-                    case 'w':
-                        tp = {top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left + pos.width + this.options.offset};
-                        break;
-                }
-
-                if (gravity.length == 2) {
-                    if (gravity.charAt(1) == 'w') {
-                        tp.left = pos.left + pos.width / 2 - 15;
-                    } else {
-                        tp.left = pos.left + pos.width / 2 - actualWidth + 15;
-                    }
-                }
-
-                $tip.css(tp).addClass('hint-css-' + gravity);
-                $tip.find('.hint-css-arrow')[0].className = 'hint-css-arrow hint-css-arrow-' + gravity.charAt(0);
                 if (this.options.className) {
                     $tip.addClass(maybeCall(this.options.className, this.$element[0]));
                 }
 
                 if (this.options.fade) {
-                    $tip.stop().css({opacity: 0, display: 'block', visibility: 'visible'}).animate({opacity: this.options.opacity});
+                    $tip.stop().css({
+                        opacity: 0,
+                        display: 'block',
+                        visibility: 'visible'
+                    }).animate({opacity: this.options.opacity});
                 } else {
                     $tip.css({visibility: 'visible', opacity: this.options.opacity});
                 }
+                this.calculatePosition();
+                this._checkStatus();
             }
         },
 
-        hide: function() {
+        update: function (title) {
+            var $tip = this.tip();
+            if ($tip && title && this.enabled) {
+
+                $tip.find('.hint-css-inner')[this.options.html ? 'html' : 'text'](title);
+            }
+        },
+
+        calculatePosition: function () {
+            var $tip = this.tip();
+            var pos = $.extend({}, this.$element.offset(), {
+                width: this.$element[0].offsetWidth,
+                height: this.$element[0].offsetHeight
+            });
+
+            var actualWidth = $tip[0].offsetWidth,
+                actualHeight = $tip[0].offsetHeight,
+                gravity = maybeCall(this.options.gravity, this.$element[0]);
+
+            var tp;
+            switch (gravity.charAt(0)) {
+                case 'n':
+                    tp = {
+                        top: pos.top + pos.height + this.options.offset,
+                        left: pos.left + pos.width / 2 - actualWidth / 2
+                    };
+                    break;
+                case 's':
+                    tp = {
+                        top: pos.top - actualHeight - this.options.offset,
+                        left: pos.left + pos.width / 2 - actualWidth / 2
+                    };
+                    break;
+                case 'e':
+                    tp = {
+                        top: pos.top + pos.height / 2 - actualHeight / 2,
+                        left: pos.left - actualWidth - this.options.offset
+                    };
+                    break;
+                case 'w':
+                    tp = {
+                        top: pos.top + pos.height / 2 - actualHeight / 2,
+                        left: pos.left + pos.width + this.options.offset
+                    };
+                    break;
+            }
+
+            if (gravity.length == 2) {
+                if (gravity.charAt(1) == 'w') {
+                    tp.left = pos.left + pos.width / 2 - 15;
+                } else {
+                    tp.left = pos.left + pos.width / 2 - actualWidth + 15;
+                }
+            }
+
+            if (gravity === 'n' && tp.top + actualHeight > $(window).height()) {
+                gravity = 's';
+                tp.top = pos.top - actualHeight - this.options.offset;
+            }
+            $tip.css(tp);
+            $tip.addClass('hint-css-' + gravity);
+            $tip.find('.hint-css-arrow')[0].className = 'hint-css-arrow hint-css-arrow-' + gravity.charAt(0);
+        },
+
+        hide: function () {
             if (this.options.fade) {
-                this.tip().stop().fadeOut(function() { $(this).remove(); });
+                this.tip().stop().fadeOut(function () {
+                    $(this).remove();
+                });
             } else {
                 this.tip().remove();
             }
+            window.clearInterval(this._checkingInterval)
         },
 
-        fixTitle: function() {
+        fixTitle: function () {
             var $e = this.$element;
-            if ($e.attr('title') || typeof($e.attr('data-hint')) != 'string') {
+            if ($e.attr('title') && !$e.attr('data-hint')) {
                 $e.attr('data-hint', $e.attr('title') || '').removeAttr('title');
             }
         },
 
-        getTitle: function() {
+        getTitle: function () {
             var title, $e = this.$element, o = this.options;
             this.fixTitle();
             if (typeof o.title == 'string') {
@@ -102,53 +145,139 @@
             return title || o.fallback;
         },
 
-        tip: function() {
+        tip: function () {
             if (!this.$tip) {
                 this.$tip = $('<div class="hint-css"></div>').html('<div class="hint-css-arrow"></div><div class="hint-css-inner"></div>');
                 this.$tip.data('hint-pointee', this.$element[0]);
             }
             return this.$tip;
+        },
+
+        _checkStatus: function () {
+          if (this._checkingInterval) {
+              window.clearInterval(this._checkingInterval);
+          }
+          var that = this;
+          this._checkingInterval = window.setInterval(function () {
+            if (!that.$element || that.$element.is(':hidden')) {
+              that.hide();
+            }
+          }, 300);
         }
     };
 
     // global listen
     $.hint = function () {
         var get = function (ele, options) {
-            var hint = ele.data('hint-css');
-            if (!hint) {
-                hint = new Hint(ele, $.extend({}, $.hint.defaults, options));
-                ele.data('hint-css', hint);
-            }
-            return hint;
-        };
+                var hint = ele.data('hint-css');
+                var keyAndValue = ele.data('hint-object');
+                options.html = !!ele.data('hint-html');
+                options.textAlign = ele.data('hint-align') || $.hint.defaults.textAlign;
+                options.maxWidth = ele.data('hint-max-width') || 0;
+                if (!hint) {
+                    if (keyAndValue && typeof keyAndValue === 'object') {
+                        hint = new Hint(ele, $.extend({}, $.hint.defaults, options, {
+                            className: 'hint-object',
+                            html: true,
+                            title: function () {
+                                return $('<div>').append($.dialog.getKeyAndValTable(keyAndValue, 2)).html();
+                            }
+                        }));
+                    } else {
+                        hint = new Hint(ele, $.extend({}, $.hint.defaults, options));
 
+                    }
+                    ele.data('hint-css', hint);
+                }
+                return hint;
+            },
+            getGravity = function ($e) {
+                if ($e.data('gravity')) {
+                    return $e.data('gravity');
+                }
+                if ($e.hasClass('hint--top')) {
+                    return 's';
+                } else if ($e.hasClass('hint--bottom')) {
+                    return 'n';
+                } else if ($e.hasClass('hint--left')) {
+                    return 'e';
+                } else if ($e.hasClass('hint--right')) {
+                    return 'w';
+                }
+                return 'n';
+            };
+
+        var timer = 0;
         $(document).on('mouseenter', '[data-hint]', function (e) {
-            var $e = $(e.currentTarget);
-            var hint = get($e, {gravity: $e.hasClass('hint--top') ? 's' : 'n'});
-            hint.hoverState = 'in';
-            hint.show();
+            if ($(this).data('hint-type') === 'ignore') {
+                return;
+            }
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+            timer = setTimeout(function () {
+                var $e = $(e.currentTarget);
+                var hint = get($e, {gravity: getGravity($e)});
+                hint.hoverState = 'in';
+                hint.show();
+            }, $.hint.defaults.delayIn);
         });
         $(document).on('mouseleave', '[data-hint]', function (e) {
+            if ($(this).data('hint-type') === 'ignore') {
+                return;
+            }
+            clearTimeout(timer);
             var $e = $(e.currentTarget);
-            var hint = get($e, {gravity: $e.hasClass('hint--top') ? 's' : 'n'});
+            var hint = get($e, {gravity: getGravity($e)});
             hint.hoverState = 'out';
             hint.hide();
         });
+        $(document).on('click', '[data-hint]', function (e) {
+            clearTimeout(timer);
+        });
+    };
+
+    $.fn.hint = function (method, params) {
+        var $e = this;
+        var hint = $('body').data('hint-css');
+        $e.data('hint-type', 'ignore');
+        switch (method) {
+        case 'show':
+            hint = new Hint($e, $.extend({}, $.hint.defaults, {
+                gravity: 'n',
+                className: 'hint-object',
+                html: true,
+                title: function () {
+                    return $('<div>').append($.dialog.getKeyAndValTable(params, 2)).html();
+                }
+            }));
+            hint.hoverState = 'in';
+            hint.show();
+            $('body').data('hint-css', hint);
+            break;
+        case 'update':
+            hint.update($('<div>').append($.dialog.getKeyAndValTable(params, 2)).html());
+            break;
+        case 'hide':
+            hint.hoverState = 'out';
+            hint.hide();
+            break;
+        }
     };
 
     $.hint.defaults = {
         className: null,
-        delayIn: 0,
-        delayOut: 0,
+        delayIn: 500,
         fade: false,
         fallback: '',
         gravity: 'n',
-        html: false,
+        html: false, //data-hint-html="true|false"
         live: false,
         offset: 0,
         opacity: 0.8,
         title: 'title',
-        trigger: 'hover'
+        textAlign: 'center',    //data-hint-align="center"
+        maxWidth: 0    // data-hint-max-width
     };
 
 })(jQuery);
