@@ -180,6 +180,11 @@
               className: 'hint-object',
               html: true,
               title: function () {
+                try {
+                  keyAndValue = JSON.parse(ele.attr('data-hint-object'))
+                } catch (e) {
+                  // to nothing
+                }
                 return $('<div>').append($.dialog.getKeyAndValTable(keyAndValue, 2)).html()
               }
             }))
