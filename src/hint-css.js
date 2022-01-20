@@ -217,6 +217,12 @@
       if ($(this).data('hint-type') === 'ignore') {
         return
       }
+      if (
+        $(this).attr('hint-auto') !== undefined &&
+        $(this)[0].offsetWidth >= $(this)[0].scrollWidth
+      ) {
+        return
+      }
       if (e.stopPropagation) {
         e.stopPropagation()
       }

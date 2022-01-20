@@ -1,6 +1,6 @@
 {
   "name": "hint-css",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "hint.css by jquery",
   "main": "src/hint-css.js",
   "repository": {
