@@ -110,6 +110,12 @@
         gravity = 's'
         tp.top = pos.top - actualHeight - this.options.offset
       }
+
+      if (tp.left < 0 || tp.top < 0) {
+        tp.left = -1000
+        tp.top = -1000
+      }
+
       $tip.css(tp)
       $tip.addClass('hint-css-' + gravity)
       $tip.find('.hint-css-arrow')[0].className = 'hint-css-arrow hint-css-arrow-' + gravity.charAt(0)
