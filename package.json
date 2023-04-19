@@ -1,5 +1,5 @@
 {
-  "name": "hint-css",
+  "name": "hint-css.js",
   "version": "1.2.0",
   "description": "hint.css by jquery",
   "main": "src/hint-css.js",

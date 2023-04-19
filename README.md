@@ -1,6 +1,6 @@
-# hint-css
+# hint-css.js
 
-hint.css by jQuery
+hint css by jQuery
 
 ## Example
 
