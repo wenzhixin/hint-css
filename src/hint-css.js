@@ -1,5 +1,5 @@
 /**
- * version: 1.1.0
+ * version: 1.2.0
  * https://github.com/wenzhixin/hint-css
  */
 
@@ -66,6 +66,9 @@
         height: this.$element[0].offsetHeight
       })
 
+      // reset height every time
+      $tip.css('height', 'auto')
+
       var actualWidth = $tip[0].offsetWidth,
         actualHeight = $tip[0].offsetHeight,
         gravity = maybeCall(this.options.gravity, this.$element[0])
@@ -106,9 +109,16 @@
         }
       }
 
-      if (gravity === 'n' && tp.top + actualHeight > $(window).height()) {
-        gravity = 's'
-        tp.top = pos.top - actualHeight - this.options.offset
+      if (
+        gravity === 'n' &&
+        tp.top + actualHeight > $(window).height()
+      ) {
+        if (pos.top - actualHeight - this.options.offset > 0) {
+          gravity = 's'
+          tp.top = pos.top - actualHeight - this.options.offset
+        } else {
+          tp.height = $(window).height() - tp.top - this.options.offset - 10
+        }
       }
 
       if (tp.left < 0 || tp.top < 0) {
@@ -153,7 +163,8 @@
 
     tip: function () {
       if (!this.$tip) {
-        this.$tip = $('<div class="hint-css"></div>').html('<div class="hint-css-arrow"></div><div class="hint-css-inner"></div>')
+        this.$tip = $('<div class="hint-css"></div>')
+          .html('<div class="hint-css-arrow"></div><div class="hint-css-inner"></div>')
         this.$tip.data('hint-pointee', this.$element[0])
       }
       return this.$tip
@@ -174,51 +185,61 @@
 
   // global listen
   $.hint = function () {
-    var get = function (ele, options) {
-        var hint = ele.data('hint-css')
-        var keyAndValue = ele.data('hint-object')
-        options.html = !!ele.data('hint-html')
-        options.textAlign = ele.data('hint-align') || $.hint.defaults.textAlign
-        options.maxWidth = ele.data('hint-max-width') || 0
-        if (!hint) {
-          if (keyAndValue && typeof keyAndValue === 'object') {
-            hint = new Hint(ele, $.extend({}, $.hint.defaults, options, {
-              className: 'hint-object',
-              html: true,
-              title: function () {
-                try {
-                  keyAndValue = JSON.parse(ele.attr('data-hint-object'))
-                } catch (e) {
-                  // to nothing
-                }
-                return $('<div>').append($.dialog.getKeyAndValTable(keyAndValue, 2)).html()
-              }
-            }))
-          } else {
-            hint = new Hint(ele, $.extend({}, $.hint.defaults, options))
-
-          }
-          ele.data('hint-css', hint)
-        }
-        return hint
-      },
-      getGravity = function ($e) {
-        if ($e.data('gravity')) {
-          return $e.data('gravity')
-        }
-        if ($e.hasClass('hint--top')) {
-          return 's'
-        } else if ($e.hasClass('hint--bottom')) {
-          return 'n'
-        } else if ($e.hasClass('hint--left')) {
-          return 'e'
-        } else if ($e.hasClass('hint--right')) {
-          return 'w'
-        }
-        return 'n'
-      }
-
+    var hint
     var timer = 0
+    var leaveTimer = 0
+    var inHint = false
+    var get = function (ele, options) {
+      var hint = ele.data('hint-css')
+      var keyAndValue = ele.data('hint-object')
+      options.html = !!ele.data('hint-html')
+      options.textAlign = ele.data('hint-align') || $.hint.defaults.textAlign
+      options.maxWidth = ele.data('hint-max-width') || 0
+      if (!hint) {
+        if (keyAndValue && typeof keyAndValue === 'object') {
+          hint = new Hint(ele, $.extend({}, $.hint.defaults, options, {
+            className: 'hint-object',
+            html: true,
+            title: function () {
+              try {
+                keyAndValue = JSON.parse(ele.attr('data-hint-object'))
+              } catch (e) {
+                // to nothing
+              }
+              return $('<div>').append($.dialog.getKeyAndValTable(keyAndValue, 2)).html()
+            }
+          }))
+        } else {
+          hint = new Hint(ele, $.extend({}, $.hint.defaults, options))
+        }
+        ele.data('hint-css', hint)
+      }
+      return hint
+    }
+    var getGravity = function ($e) {
+      if ($e.data('gravity')) {
+        return $e.data('gravity')
+      }
+      if ($e.hasClass('hint--top')) {
+        return 's'
+      } else if ($e.hasClass('hint--bottom')) {
+        return 'n'
+      } else if ($e.hasClass('hint--left')) {
+        return 'e'
+      } else if ($e.hasClass('hint--right')) {
+        return 'w'
+      }
+      return 'n'
+    }
+    var hideHint = function (e) {
+      inHint = false
+      clearTimeout(timer)
+      if (hint) {
+        hint.hoverState = 'out'
+        hint.hide()
+      }
+    }
+
     $(document).on('mouseenter', '[data-hint]', function (e) {
       if ($(this).data('hint-type') === 'ignore') {
         return
@@ -232,9 +253,11 @@
       if (e.stopPropagation) {
         e.stopPropagation()
       }
+      clearTimeout(leaveTimer)
+      hideHint()
       timer = setTimeout(function () {
         var $e = $(e.currentTarget)
-        var hint = get($e, {gravity: getGravity($e)})
+        hint = get($e, {gravity: getGravity($e)})
         hint.hoverState = 'in'
         hint.show()
       }, $.hint.defaults.delayIn)
@@ -243,14 +266,20 @@
       if ($(this).data('hint-type') === 'ignore') {
         return
       }
-      clearTimeout(timer)
-      var $e = $(e.currentTarget)
-      var hint = get($e, {gravity: getGravity($e)})
-      hint.hoverState = 'out'
-      hint.hide()
+      leaveTimer = setTimeout(function () {
+        if (!inHint) {
+          hideHint()
+        }
+      }, $.hint.defaults.delayIn)
     })
     $(document).on('click', '[data-hint]', function (e) {
       clearTimeout(timer)
+    })
+    $(document).on('mouseenter', '.hint-css', function (e) {
+      inHint = true
+    })
+    $(document).on('mouseleave', '.hint-css', function (e) {
+      hideHint()
     })
   }
 

@@ -10,6 +10,8 @@
   max-width: 200px;
   padding: 5px 8px 4px 8px;
   text-align: center;
+  overflow: auto;
+  height: 100%;
 }
 
 .hint-css-inner.hint-css-inner-html {
