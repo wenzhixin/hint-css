@@ -46,7 +46,7 @@ yarn add hint-css.js
 ```js
 $.hint.defaults = {
   className: null,
-  delayIn: 500,
+  delayIn: 800,
   fade: false,
   fallback: '',
   gravity: 'n',
