@@ -322,7 +322,7 @@
     offset: 0,
     opacity: 0.8,
     title: 'title',
-    textAlign: 'center',  //data-hint-align="center"
+    textAlign: 'left',  //data-hint-align="left"
     maxWidth: 0  // data-hint-max-width
   }
 
