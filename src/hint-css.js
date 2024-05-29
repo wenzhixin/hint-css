@@ -1,12 +1,19 @@
-/**
- * version: 1.2.0
- * https://github.com/wenzhixin/hint-css
- */
-
 (function ($) {
 
   function maybeCall(thing, ctx) {
     return (typeof thing == 'function') ? (thing.call(ctx)) : thing
+  }
+
+  function getKeyAndValTable(data, level) {
+    if ($.dialog && $.dialog.getKeyAndValTable) {
+      return $.dialog.getKeyAndValTable(data, level)
+    }
+
+    if (utils && utils.RenderUtil && utils.RenderUtil.getKeyAndValTable) {
+      return utils.RenderUtil.getKeyAndValTable(data, level)
+    }
+
+    return ''
   }
 
   function Hint(element, options) {
@@ -206,7 +213,7 @@
               } catch (e) {
                 // to nothing
               }
-              return $('<div>').append($.dialog.getKeyAndValTable(keyAndValue, 2)).html()
+              return $('<div>').append(getKeyAndValTable(keyAndValue, 2)).html()
             }
           }))
         } else {
@@ -294,7 +301,7 @@
         className: 'hint-object',
         html: true,
         title: function () {
-          return $('<div>').append($.dialog.getKeyAndValTable(params, 2)).html()
+          return $('<div>').append(getKeyAndValTable(params, 2)).html()
         }
       }))
       hint.hoverState = 'in'
@@ -302,7 +309,7 @@
       $('body').data('hint-css', hint)
       break
     case 'update':
-      hint.update($('<div>').append($.dialog.getKeyAndValTable(params, 2)).html())
+      hint.update($('<div>').append(getKeyAndValTable(params, 2)).html())
       break
     case 'hide':
       hint.hoverState = 'out'
