@@ -7,15 +7,11 @@
 .hint-css-inner {
   background-color: #000;
   color: #FFF;
-  max-width: 200px;
+  max-width: 300px;
   padding: 5px 8px 4px 8px;
   text-align: left;
   overflow: auto;
   height: 100%;
-}
-
-.hint-css-inner.hint-css-inner-html {
-  max-width: 300px;
 }
 
 .hint-object .hint-css-inner.hint-css-inner-html {

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>hint-css.js</title>
+  <link rel="stylesheet" href="src/hint-css.css">
+  <style>
+    body {
+      padding: 10px;
+    }
+    .examples-center {
+      width: 200px;
+      margin: 100px auto;
+    }
+    .examples-left {
+      float: left;
+    }
+    .examples-right {
+      float: right;
+    }
+    .examples-bottom {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+    }
+  </style>
+</head>
+<body>
+  <div class="examples-center">
+    <button data-hint="Tooltips">bottom</button>
+    <button class="hint--top" data-hint="Tooltips">top</button>
+    <button class="hint--left" data-hint="Tooltips">left</button>
+    <button class="hint--right" data-hint="Tooltips">right</button>
+  </div>
+  <div class="examples-left">
+    <button data-hint="This is a CSS only tooltip library for your lovely websites.">dl</button>
+  </div>
+  <div class="examples-right">
+    <button data-hint="This is a CSS only tooltip library for your lovely websites.">dr</button>
+  </div>
+  <div class="examples-bottom">
+    <button data-hint="This is a CSS only tooltip library for your lovely websites.">db</button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+  <script src="src/hint-css.js"></script>
+</body>
+</html>

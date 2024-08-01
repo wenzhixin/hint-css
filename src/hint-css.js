@@ -116,15 +116,25 @@
         }
       }
 
-      if (
-        gravity === 'n' &&
-        tp.top + actualHeight > $(window).height()
-      ) {
-        if (pos.top - actualHeight - this.options.offset > 0) {
-          gravity = 's'
-          tp.top = pos.top - actualHeight - this.options.offset
-        } else {
-          tp.height = $(window).height() - tp.top - this.options.offset - 10
+      if (gravity === 'n') {
+        // 假如在底部且显示不全，自动调整为向上
+        if (tp.top + actualHeight > $(window).height()) {
+          if (pos.top - actualHeight - this.options.offset > 0) {
+            gravity = 's'
+            tp.top = pos.top - actualHeight - this.options.offset
+          } else {
+            tp.height = $(window).height() - tp.top - this.options.offset - 10
+          }
+        }
+        // 最左边，自动调整位置和箭头位置
+        if (tp.left < 0) {
+          tp.left = 0
+          tp.arrowLeft = pos.left + pos.width / 2
+        }
+        // 最右边，自动调整位置和箭头位置
+        if (tp.left + actualWidth > $(window).width()) {
+          tp.left = $(window).width() - actualWidth
+          tp.arrowLeft = pos.left + pos.width / 2 - tp.left
         }
       }
 
@@ -133,9 +143,14 @@
         tp.top = -1000
       }
 
-      $tip.css(tp)
-      $tip.addClass('hint-css-' + gravity)
-      $tip.find('.hint-css-arrow')[0].className = 'hint-css-arrow hint-css-arrow-' + gravity.charAt(0)
+      $tip.css(tp).addClass('hint-css-' + gravity)
+
+      const $arrow = $tip.find('.hint-css-arrow')
+        .attr('class', `hint-css-arrow hint-css-arrow-${gravity.charAt(0)}`)
+
+      if (tp.arrowLeft) {
+        $arrow.css('left', tp.arrowLeft)
+      }
     },
 
     hide: function () {
