@@ -20,8 +20,8 @@ yarn add hint-css.js
 ### CDN
 
 ```
-<link rel="stylesheet" href="https://unpkg.com/hint-css.js@1.2.0/src/hint-css.css">
-<script src="https://unpkg.com/hint-css.js@1.2.0/src/hint-css.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/hint-css.js@1.5.0/src/hint-css.css">
+<script src="https://unpkg.com/hint-css.js@1.5.0/src/hint-css.js"></script>
 ```
 
 ## How to use
@@ -38,8 +38,8 @@ yarn add hint-css.js
 
 * hint--bottom
 * hint--top
-* hint-left
-* hint-right
+* hint--left
+* hint--right
 
 ## Options
 
