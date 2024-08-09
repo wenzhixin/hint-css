@@ -4,18 +4,6 @@
     return (typeof thing == 'function') ? (thing.call(ctx)) : thing
   }
 
-  function getKeyAndValTable(data, level) {
-    if ($.dialog && $.dialog.getKeyAndValTable) {
-      return $.dialog.getKeyAndValTable(data, level)
-    }
-
-    if (utils && utils.RenderUtil && utils.RenderUtil.getKeyAndValTable) {
-      return utils.RenderUtil.getKeyAndValTable(data, level)
-    }
-
-    return ''
-  }
-
   function Hint(element, options) {
     this.$element = $(element)
     this.options = options
@@ -213,22 +201,22 @@
     var inHint = false
     var get = function (ele, options) {
       var hint = ele.data('hint-css')
-      var keyAndValue = ele.data('hint-object')
+      var hintObject = ele.data('hint-object')
       options.html = !!ele.data('hint-html')
       options.textAlign = ele.data('hint-align') || $.hint.defaults.textAlign
       options.maxWidth = ele.data('hint-max-width') || 0
       if (!hint) {
-        if (keyAndValue && typeof keyAndValue === 'object') {
+        if (hintObject && typeof hintObject === 'object') {
           hint = new Hint(ele, $.extend({}, $.hint.defaults, options, {
             className: 'hint-object',
             html: true,
             title: function () {
               try {
-                keyAndValue = JSON.parse(ele.attr('data-hint-object'))
+                hintObject = JSON.parse(ele.attr('data-hint-object'))
               } catch (e) {
                 // to nothing
               }
-              return $('<div>').append(getKeyAndValTable(keyAndValue, 2)).html()
+              return $.hint.defaults.hintObjectFormatter(hintObject)
             }
           }))
         } else {
@@ -316,7 +304,7 @@
         className: 'hint-object',
         html: true,
         title: function () {
-          return $('<div>').append(getKeyAndValTable(params, 2)).html()
+          return $.hint.defaults.hintObjectFormatter(params)
         }
       }))
       hint.hoverState = 'in'
@@ -324,7 +312,7 @@
       $('body').data('hint-css', hint)
       break
     case 'update':
-      hint.update($('<div>').append(getKeyAndValTable(params, 2)).html())
+      hint.update($.hint.defaults.hintObjectFormatter(params))
       break
     case 'hide':
       hint.hoverState = 'out'
@@ -345,7 +333,8 @@
     opacity: 0.8,
     title: 'title',
     textAlign: 'left',  //data-hint-align="left"
-    maxWidth: 0  // data-hint-max-width
+    maxWidth: 0,  // data-hint-max-width
+    hintObjectFormatter: () => ''
   }
 
 })(jQuery)
