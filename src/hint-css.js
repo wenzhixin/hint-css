@@ -292,7 +292,7 @@
         if (!inHint) {
           hideHint()
         }
-      }, 100)
+      }, $.hint.defaults.delayOut)
     })
     $(document).on('click', '[data-hint]', function (e) {
       clearTimeout(timer)
@@ -336,6 +336,7 @@
   $.hint.defaults = {
     className: null,
     delayIn: 800,
+    delayOut: 100,
     fade: false,
     fallback: '',
     gravity: 'n',
