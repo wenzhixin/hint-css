@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>hint-css.js - Object Examples</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../src/hint-css.css">
+  <style>
+    body {
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+    h3 {
+      margin-top: 20px;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+    button {
+      margin: 5px;
+      padding: 8px 16px;
+      cursor: pointer;
+    }
+    /* hint-object 表格样式 */
+    .detail-root {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 12px;
+    }
+    .detail-root td {
+      padding: 2px 6px;
+      vertical-align: top;
+      border: none;
+    }
+    .detail-key {
+      font-weight: 600;
+      color: #aaa !important;
+      white-space: nowrap;
+      min-width: 80px;
+    }
+    .detail-value {
+      color: #fff !important;
+    }
+    .detail-ul-level0,
+    .detail-ul-level1,
+    .detail-ul-level2 {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+    .detail-ul-level1 {
+      padding-left: 12px;
+    }
+    .detail-ul-level2 {
+      padding-left: 24px;
+    }
+    .detail-ul-level1 li,
+    .detail-ul-level2 li {
+      padding: 2px 0;
+    }
+    .detail-object,
+    .detail-array {
+      margin-top: 4px;
+    }
+    .detail-array {
+      list-style: none;
+    }
+    /* Icon and button styles */
+    .detail-icon {
+      margin-right: 4px;
+      opacity: 0.8;
+    }
+    .detail-value-wrapper {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .detail-value-text {
+      flex: 1;
+    }
+    .detail-copy-btn {
+      background: transparent;
+      border: 1px solid #555;
+      color: #aaa;
+      padding: 2px 6px;
+      font-size: 10px;
+      cursor: pointer;
+      border-radius: 3px;
+      opacity: 0;
+      transition: opacity 0.2s, background 0.2s, color 0.2s;
+    }
+    .detail-copy-btn:hover {
+      background: #333;
+      color: #fff;
+      border-color: #777;
+    }
+    .hint-css-inner-html .detail-copy-btn {
+      opacity: 0.5;
+    }
+    .hint-css-inner-html:hover .detail-copy-btn {
+      opacity: 1;
+    }
+    .detail-copy-btn.copied {
+      background: #28a745;
+      color: #fff;
+      border-color: #28a745;
+    }
+    /* Status colors */
+    .text-success {
+      color: #28a745 !important;
+    }
+    .text-danger {
+      color: #dc3545 !important;
+    }
+    .text-warning {
+      color: #ffc107 !important;
+    }
+    .text-info {
+      color: #17a2b8 !important;
+    }
+  </style>
+</head>
+<body>
+  <h1>hint-object Complex Examples</h1>
+  <p>Hover over the buttons below to view object data hints:</p>
+
+  <h3>1. User Information (Simple Object)</h3>
+  <button data-hint data-hint-object='{"user": "Zhang San", "age": 28, "city": "Beijing", "email": "zhangsan@example.com", "phone": "+86-138-0000-0000", "url": "https://example.com/profile/zhangsan", "joinDate": "2024-01-15", "lastLoginTime": "2024-03-04T10:30:00Z"}'>
+    User Info
+  </button>
+
+  <h3>2. Product Details (Nested Object)</h3>
+  <button data-hint data-hint-object='{"id": "PROD-001", "name": "Smart Watch", "price": 1299.00, "specs": {"brand": "Apple", "model": "Watch Series 9", "color": "Midnight", "size": "45mm"}, "stock": 50, "available": true, "featured": false}'>
+    Product Details
+  </button>
+
+  <h3>3. Order Information (Complex Nested)</h3>
+  <button data-hint data-hint-object='{"orderId": "ORD-20240304-001", "customer": {"name": "Li Si", "phone": "138****8888", "level": "VIP"}, "items": [{"product": "Smart Watch", "quantity": 1}, {"product": "Watch Band", "quantity": 2}], "total": 1499.00, "status": "Shipped", "warnings": [], "info": "Express delivery"}'>
+    Order Info
+  </button>
+
+  <h3>4. System Status (Array Object)</h3>
+  <button data-hint data-hint-object='{"server": {"status": "online", "cpu": 45.2, "memory": 68.5, "disk": 82.1}, "database": {"status": "online", "connections": 156, "qps": 1234}, "cache": {"status": "online", "hitRate": 94.5, "memoryUsage": 512}, "backup": {"status": "offline", "lastBackup": "2024-03-03"}}'>
+    System Status
+  </button>
+
+  <h3>5. API Response Example (Real World Scenario)</h3>
+  <button data-hint data-hint-object='{"code": 200, "message": "success", "data": {"userId": 12345, "username": "UserABC", "profile": {"avatar": "https://example.com/avatar.png", "bio": "This is a bio", "followers": 1024, "following": 256}, "settings": {"notifications": true, "theme": "dark", "language": "en-US"}}, "timestamp": "2024-03-04T10:30:00Z"}'>
+    API Response
+  </button>
+
+  <h3>6. Configuration File (Multi-level)</h3>
+  <button data-hint data-hint-object='{"app": {"name": "MyApp", "version": "2.0.1", "env": "production"}, "server": {"host": "api.example.com", "port": 443, "ssl": true}, "database": {"host": "db.example.com", "port": 5432, "name": "myapp_db", "poolSize": 20}, "features": {"featureA": true, "featureB": false, "betaFeatures": ["newUI", "advancedSearch"]}, "limits": {"maxRequests": 1000, "timeout": 30}}'>
+    Config File
+  </button>
+
+  <h3>7. HTML Content with Nested Hint (Bug Example)</h3>
+  <button data-hint data-hint-html="true" data-hint-object='{"title": "User Profile", "status": "active", "htmlContent": "<span data-hint=\"This will cause issues\">Nested Hint</span>", "description": "This example shows the bug when value contains HTML with data-hint attribute"}'>
+    HTML with Nested Hint Bug
+  </button>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+  <script>
+    const getKeyAndValTable = (data, level) => {
+      level = level > 0 ? level : 0
+
+      // Icon mapping
+      const iconMap = {
+        'user': '<i class="fa fa-user"></i>',
+        'email': '<i class="fa fa-envelope"></i>',
+        'phone': '<i class="fa fa-phone"></i>',
+        'status': '<i class="fa fa-circle"></i>',
+        'online': '<i class="fa fa-circle text-success"></i>',
+        'offline': '<i class="fa fa-circle text-danger"></i>',
+        'url': '<i class="fa fa-link"></i>',
+        'date': '<i class="fa fa-calendar"></i>',
+        'time': '<i class="fa fa-clock"></i>',
+        'success': '<i class="fa fa-check-circle text-success"></i>',
+        'error': '<i class="fa fa-exclamation-circle text-danger"></i>',
+        'warning': '<i class="fa fa-exclamation-triangle text-warning"></i>',
+        'info': '<i class="fa fa-info-circle text-info"></i>',
+        'copy': '<i class="fa fa-copy"></i>',
+        'database': '<i class="fa fa-database"></i>',
+        'server': '<i class="fa fa-server"></i>',
+        'cache': '<i class="fa fa-bolt"></i>',
+        'cpu': '<i class="fa fa-microchip"></i>',
+        'memory': '<i class="fa fa-memory"></i>',
+        'disk': '<i class="fa fa-hdd"></i>'
+      }
+
+      const getIcon = (key) => {
+        const lowerKey = key.toLowerCase()
+        if (iconMap[lowerKey]) {
+          return iconMap[lowerKey]
+        }
+        // 检查部分匹配
+        for (const k in iconMap) {
+          if (lowerKey.includes(k) || k.includes(lowerKey)) {
+            return iconMap[k]
+          }
+        }
+        return ''
+      }
+
+      // Format value, add copy button
+      const formatValueWithActions = (key, val, currentLevel) => {
+        let valueHtml = val
+        const icon = getIcon(key)
+
+        // Add copy button for string or number values
+        if (typeof val === 'string' || typeof val === 'number') {
+          const copyId = `copy-${Math.random().toString(36).substr(2, 9)}`
+          valueHtml = `
+            <span class="detail-value-wrapper">
+              ${icon ? `<span class="detail-icon">${icon}</span>` : ''}
+              <span class="detail-value-text">${val}</span>
+              <button class="detail-copy-btn" data-copy-id="${copyId}" data-copy-value="${val}" title="Copy">
+                <i class="fa fa-copy"></i>
+              </button>
+            </span>
+          `
+        } else if (typeof val === 'boolean') {
+          const statusIcon = val ? iconMap.success : iconMap.error
+          valueHtml = `
+            <span class="detail-value-wrapper">
+              ${statusIcon} <span class="detail-value">${val}</span>
+            </span>
+          `
+        }
+
+        return valueHtml
+      }
+
+      const formatValue = (key, val, currentLevel) => {
+        if (val === null || val === undefined) {
+          return `<li><span class="detail-key">${key}</span>: <span class="detail-value">-</span></li>`
+        }
+        if (typeof val === 'boolean') {
+          return `<li><span class="detail-key">${key}</span>: ${formatValueWithActions(key, val, currentLevel)}</li>`
+        }
+        if (typeof val === 'number') {
+          return `<li><span class="detail-key">${key}</span>: ${formatValueWithActions(key, val, currentLevel)}</li>`
+        }
+        if (typeof val === 'string') {
+          return `<li><span class="detail-key">${key}</span>: ${formatValueWithActions(key, val, currentLevel)}</li>`
+        }
+        if (Array.isArray(val)) {
+          if (val.length === 0) {
+            return `<li><span class="detail-key">${key}</span>: <span class="detail-value">[]</span></li>`
+          }
+          let html = `<li><span class="detail-key">${key}</span>: <ul class="detail-array detail-ul-level${level - currentLevel + 1}">`
+          for (let i = 0; i < val.length; i++) {
+            if (currentLevel > 1) {
+              if (typeof val[i] === 'object' && val[i] !== null) {
+                html += `<li>${formatObjectValue(val[i], currentLevel - 1)}</li>`
+              } else {
+                html += `<li>${formatValueWithActions(`[${i}]`, val[i], currentLevel)}</li>`
+              }
+            } else {
+              html += `<li><span class="detail-value">${JSON.stringify(val[i])}</span></li>`
+            }
+          }
+          html += '</ul></li>'
+          return html
+        }
+        if (typeof val === 'object') {
+          const keys = Object.keys(val)
+          if (keys.length === 0) {
+            return `<li><span class="detail-key">${key}</span>: <span class="detail-value">{}</span></li>`
+          }
+          let html = `<li><span class="detail-key">${key}</span>: <ul class="detail-object detail-ul-level${level - currentLevel + 1}">`
+          for (const k in val) {
+            if (currentLevel > 1) {
+              html += formatValue(k, val[k], currentLevel - 1)
+            } else {
+              html += `<li><span class="detail-key">${k}</span>: <span class="detail-value">${JSON.stringify(val[k])}</span></li>`
+            }
+          }
+          html += '</ul></li>'
+          return html
+        }
+        return `<li><span class="detail-key">${key}</span>: <span class="detail-value">${val}</span></li>`
+      }
+
+      const formatObjectValue = (obj, currentLevel) => {
+        if (typeof obj !== 'object' || obj === null) {
+          return `<span class="detail-value">${obj}</span>`
+        }
+        let html = `<ul class="detail-ul-level${level - currentLevel + 1}">`
+        for (const k in obj) {
+          html += formatValue(k, obj[k], currentLevel)
+        }
+        html += '</ul>'
+        return html
+      }
+
+      let tbody = '<tbody>'
+      for (const key in data) {
+        tbody += `<tr><td colspan="2">${formatObjectValue({ key: data[key] }, level)}</td></tr>`
+      }
+      tbody += '</tbody>'
+      return `<table class="detail-root">${tbody}</table>`
+    }
+
+    // Mount function to global scope for hint-css.js usage
+    if (typeof window.utils === 'undefined') {
+      window.utils = {}
+    }
+    window.utils.RenderUtil = {
+      getKeyAndValTable
+    }
+
+    // Copy functionality
+    document.addEventListener('click', function(e) {
+      const copyBtn = e.target.closest('.detail-copy-btn')
+      if (!copyBtn) return
+
+      const value = copyBtn.getAttribute('data-copy-value')
+      if (value) {
+        navigator.clipboard.writeText(value).then(() => {
+          copyBtn.classList.add('copied')
+          const originalHtml = copyBtn.innerHTML
+          copyBtn.innerHTML = '<i class="fa fa-check"></i>'
+          setTimeout(() => {
+            copyBtn.classList.remove('copied')
+            copyBtn.innerHTML = originalHtml
+          }, 1500)
+        }).catch(err => {
+          console.error('Copy failed:', err)
+        })
+      }
+    })
+  </script>
+  <script src="../src/hint-css.js"></script>
+</body>
+</html>

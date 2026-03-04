@@ -272,6 +272,10 @@
       ) {
         return
       }
+      // Ignore if the element is inside a hint box (prevents nested hints)
+      if ($(this).closest('.hint-css').length > 0) {
+        return
+      }
       if (e.stopPropagation) {
         e.stopPropagation()
       }
