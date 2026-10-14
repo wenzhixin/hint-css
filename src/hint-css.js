@@ -283,6 +283,13 @@
       hideHint()
       timer = setTimeout(function () {
         var $e = $(e.currentTarget)
+        var dom = $e && $e[0]
+        // the hover target was removed (or its document torn down) while the
+        // delay was pending: skip showing instead of rendering an orphan
+        // tooltip into a dead DOM
+        if (!dom || !dom.isConnected) {
+          return
+        }
         hint = get($e, {gravity: getGravity($e)})
         hint.hoverState = 'in'
         hint.show()
